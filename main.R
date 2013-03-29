@@ -1,4 +1,4 @@
 library(shiny)
-setwd("~/Dropbox/CoPubNet/")
+#setwd("~/Dropbox/CoPubNet")
 options(browser='firefox')
-runApp(getwd(),launch.browser = getOption("shiny.launch.browser", interactive()), port=8102)
+runApp(getwd(),launch.browser = getOption("shiny.launch.browser", interactive()))
