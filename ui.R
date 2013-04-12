@@ -18,32 +18,41 @@ shinyUI(
     
     sidebarPanel(
       
-      textInput(inputId="txt_search", "Search string", "ph[and]vagina[and]bacteria"),
-      
-      textInput(inputId="txt_lim", "Limit", "100"),
-      
+      textInput(inputId="txt_search", HTML("<div style=\"font-weight: bold\">Search string</div>"), "ph[and]vagina[and]bacteria"),
+      tags$style(type='text/css', "#txt_search { width: 500px; }"),
+      textInput(inputId="txt_lim", HTML("<div style=\"font-weight: bold\">Limit</div>"), "100"),
+      tags$style(type='text/css', "#txt_lim { width: 50px; }"),
       br(),
       
-      textInput(inputId="kterms1", "Key terms", "bacterial vaginosis,BV,vaginal bacteriosis, bacteriosis"),
+      textInput(inputId="kterms1", HTML("<div style=\"font-weight: bold\">Key terms, Set #1</div>"), "bacterial vaginosis,BV,vaginal bacteriosis, bacteriosis"),
+      helpText("Provide a set of words (key terms) that describe the area of research #1"),
+      tags$style(type='text/css', "#kterms1 { width: 500px; }"),
       br(),
-      textInput(inputId="kterms2", "Key terms", "yeast infection, Candidiasis,fungal infection"),
+      textInput(inputId="kterms2", HTML("<div style=\"font-weight: bold\">Key terms, Set #2</div>"), "yeast infection, Candidiasis,fungal infection"),
+      helpText("Provide a set of words (key terms) that describe the area of research #2"),
+      tags$style(type='text/css', "#kterms2 { width: 500px; }"),
       br(),
-      textInput(inputId="kterms3", "Key terms", "preterm birth, partus praetemporaneus, partus praematurus, Premature birth, preemies,premmies"),
+      textInput(inputId="kterms3", HTML("<div style=\"font-weight: bold\">Key terms, Set #3</div>"), "preterm birth, partus praetemporaneus, partus praematurus, Premature birth, preemies,premmies"),
+      helpText("Provide a set of words (key terms) that describe the area of research #3"),
+      tags$style(type='text/css', "#kterms3 { width: 500px; }"),
       br(),
-      textInput(inputId="kterms4", "Key terms"),
+      textInput(inputId="kterms4", HTML("<div style=\"font-weight: bold\">Key terms, Set #4</div>")),
+      helpText("Provide a set of words (key terms) that describe the area of research #4"),
+      tags$style(type='text/css', "#kterms4 { width: 500px; }"),
       br(),
-      textInput(inputId="kterms5", "Key terms"),
-      
+      textInput(inputId="kterms5", HTML("<div style=\"font-weight: bold\">Key terms, Set #5</div>")),
+      helpText("Provide a set of words (key terms) that describe the area of research #5"),
+      tags$style(type='text/css', "#kterms5 { width: 500px; }"),
       br(),
       
-      textInput(inputId="gsize", "Minimum group size", "5"),
-      
+      textInput(inputId="gsize", HTML("<div style=\"font-weight: bold\">Minimum group size</div>"), "5"),
+      tags$style(type='text/css', "#gsize { width: 50px; }"),
       br(),
       
-      textInput(inputId="from_date", "From", "2010"),
-      
-      textInput(inputId="to_date", "To", tail(strsplit(date(),' ')[[1]],1) ),
-      
+      textInput(inputId="from_date", HTML("<div style=\"font-weight: bold\">From</div>"), "2010"),
+      tags$style(type='text/css', "#from_date { width: 50px; }"),
+      textInput(inputId="to_date", HTML("<div style=\"font-weight: bold\">To</div>"), tail(strsplit(date(),' ')[[1]],1) ),
+      tags$style(type='text/css', "#to_date { width: 50px; }"),
       br(),
       
       plotOutput("balmPlotLegend", height = "100px"),
