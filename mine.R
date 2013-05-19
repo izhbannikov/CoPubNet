@@ -1,4 +1,5 @@
 library(rentrez)
+library(mine)
 
 mine <- function(search_string,search_limit,kterms,from_date,to_date) {
   #pubmed_search <- entrez_search(db = "pubmed", term = "ph[and]vagina[and]bacteria",retmax=5)
@@ -18,7 +19,9 @@ mine <- function(search_string,search_limit,kterms,from_date,to_date) {
   titles <- c()
   abstracts <- c()
   
-  while(ii<search_limit) {
+  #ifelse(search_limit < pubmed_search$count, search_limit, pubmed_search$count)
+  
+  while(ii< ifelse(search_limit < pubmed_search$count, search_limit, pubmed_search$count) ) {
     print("Limits")
     print(search_limit)
     #print(pubmed_search$ids[ii:(ii+100)])
@@ -43,7 +46,7 @@ mine <- function(search_string,search_limit,kterms,from_date,to_date) {
   ii <- 1
   
   
-  key_terms <- c(strsplit("bacterial vaginosis, yeast infection, preterm birth",','))
+  #key_terms <- c(strsplit("bacterial vaginosis, yeast infection, preterm birth",','))
   
   trial <- matrix(0,ncol=length(authors),nrow=length(authors))
   colnames(trial) <- c(authors)
@@ -114,9 +117,45 @@ mine <- function(search_string,search_limit,kterms,from_date,to_date) {
   #Delete those co-authors that are never show up as the first or last authors
   relevant_authors <- unique(relevant_authors)
   trial.table <- trial.table[relevant_authors,relevant_authors]
-  
-  return( list(data_table=trial.table,num_records=pubmed_search$count, freq_table=freq.table) )
+  #print(freq.table)
+  return( list(data_table=trial.table,num_records=pubmed_search$count, freq_table=freq.table,pimids=pubmed_search$ids,abstracts=abstracts) )
 
 }
 
-
+mine.freq <- function(pimids,abstracts,kwords) {
+  #pubmed_search <- entrez_search(db = "pubmed", term = search_string,retmax=search_limit,mindate="2010", maxdate="2013")
+  #ii <- 1
+  #authors <- c()
+  #authors2 <- c()
+  #titles <- c()
+  #abstracts <- c()
+  
+  #while(ii< ifelse(search_limit < pubmed_search$count, search_limit, pubmed_search$count) ) {
+  #  #print("Limits")
+  #  #print(search_limit)
+  #  summaries <- entrez_summary(db = "pubmed", ids = pubmed_search$ids[ii:(ii+100)],mindate="2010", maxdate="2013")
+  #  authors <- c(authors,unique(xpathSApply(summaries, "//Item[@Name='Author']",xmlValue)))
+  #  titles <- c(titles,xpathSApply(summaries, "//Item[@Name='Title']", xmlValue))
+  #  authors2 <- c(authors2,xpathSApply(summaries, "//Item[@Name='AuthorList']"))
+  #  
+  #  abstracts1 <- entrez_fetch(db = "pubmed", ids = pubmed_search$ids[ii:(ii+100)],file_format='abstract',retmode='text',mindate="2010", maxdate="2013")
+  #  abstracts <- c(abstracts,strsplit(abstracts1, "\n\n\n")[[1]])
+  #  ii <- ii+100
+    #print(ii)
+  #}
+#  print(length(abstracts))
+  report.table <- matrix("", nrow=length(abstracts)*length(kwords),ncol=3,byrow=TRUE)
+  colnames(report.table) <- c("organism","n","PMID")#,"authors")
+  #report.table <- as.table(report.table)
+  for(i in seq(length(kwords),length(abstracts)*length(kwords),by=length(kwords))) {
+    ans<-process_text(abstracts[i/length(kwords)],kwords)
+    for(j in seq(0,length(kwords)-1)) {
+      report.table[i+j-length(kwords),1] <- kwords[j+1]
+      report.table[i+j-length(kwords),2] <- ans[j+1]
+      report.table[i+j-length(kwords),3] <- pimids[i/length(kwords)]
+      #report.table[i+j-length(kwords),4] <- "NA"
+    }
+  }
+  
+  mine.freq<-report.table
+}

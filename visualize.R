@@ -25,14 +25,15 @@ balm.vizualize <- function(lines, gsize) {
   #largest <- which.max(sapply(graphs, vcount))
   weak_connected <- which(sapply(graphs, vcount) <= strtoi(gsize, base = 0L) )
   
-  bad.vs <- V(graphs[[weak_connected[1]]])$name
-  for(i in seq(2,length(weak_connected-1))) {
-    bad.vs <- append(bad.vs, V(graphs[[weak_connected[i]]])$name )
+  if(length(weak_connected)) {
+    bad.vs <- V(graphs[[weak_connected[1]]])$name
+    for(i in seq(2,length(weak_connected-1))) {
+      bad.vs <- append(bad.vs, V(graphs[[weak_connected[i]]])$name )
+    }
+    
+    bad.vs
+    bsk.network<-delete.vertices(bsk.network, bad.vs) #exclude them from the graph
   }
-
-  bad.vs
-  bsk.network<-delete.vertices(bsk.network, bad.vs) #exclude them from the graph
-
   
   #layout(matrix(c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3,4,5,6,7,8,9,10,11,12,13), 7, 4, byrow=TRUE), respect=TRUE)
   par(mar=c(0.5, 0.5, 0.5, 0.5))
@@ -147,13 +148,15 @@ balm.vizualize2 <- function(trial.table, gsize) {
   #largest <- which.max(sapply(graphs, vcount))
   weak_connected <- which(sapply(graphs, vcount) < strtoi(gsize, base = 0L) )
   
-  bad.vs <- V(graphs[[weak_connected[1]]])$name
-  for(i in seq(2,length(weak_connected-1))) {
-    bad.vs <- append(bad.vs, V(graphs[[weak_connected[i]]])$name )
+  if(length(weak_connected)>3) {
+    bad.vs <- V(graphs[[weak_connected[1]]])$name
+    for(i in seq(2,length(weak_connected-1))) {
+      bad.vs <- append(bad.vs, V(graphs[[weak_connected[i]]])$name )
+    }
+    
+    bad.vs
+    bsk.network<-delete.vertices(bsk.network, bad.vs) #exclude them from the graph
   }
-  
-  bad.vs
-  bsk.network<-delete.vertices(bsk.network, bad.vs) #exclude them from the graph
   
   
   #layout(matrix(c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3,4,5,6,7,8,9,10,11,12,13), 7, 4, byrow=TRUE), respect=TRUE)

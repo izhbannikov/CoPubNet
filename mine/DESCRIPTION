@@ -1,0 +1,11 @@
+Package: mine
+Type: Package 
+Title: Helpful package for data mining
+Version: 0.0-01
+Date: 2013-05-17 
+Author: Ilya Zhbannikov <i.zhbannikov@gmail.com> 
+Maintainer: Ilya Zhbannikov <i.zhbannikov@gmail.com> 
+Description: Helpful package for data mining
+License: GPL (>= 2) 
+Depends: R (>= 2.15) 
+Collate: mine.R

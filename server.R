@@ -1,7 +1,3 @@
-library(shiny)
-library(igraph)
-
-
 source("visualize.R", echo=T)
 source("mine.R", echo=T)
 # function shinyServer() determines the layout
@@ -41,18 +37,18 @@ shinyServer(function(input, output) {
       kterms[[ ans[1] ]] <- ans
     }  
     
-    if(nchar(input$kterms4) > 0 ) {
-      ans <- strsplit(toString(input$kterms4), ',')[[1]]
-      #print(width(input$kterms4))
-      #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
-      kterms[[ ans[1] ]] <- ans
-    }  
+    #if(nchar(input$kterms4) > 0 ) {
+    #  ans <- strsplit(toString(input$kterms4), ',')[[1]]
+    #  #print(width(input$kterms4))
+    #  #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
+    #  kterms[[ ans[1] ]] <- ans
+    #}  
     
-    if(nchar(input$kterms5) > 0 ) {
-      ans <- strsplit(toString(input$kterms5), ',')[[1]]
-      #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
-      kterms[[ ans[1] ]] <- ans
-    }
+    #if(nchar(input$kterms5) > 0 ) {
+    #  ans <- strsplit(toString(input$kterms5), ',')[[1]]
+    #  #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
+    #  kterms[[ ans[1] ]] <- ans
+    #}
     
     kterms <- kterms[!is.na(kterms)]
     print(kterms)
@@ -67,6 +63,7 @@ shinyServer(function(input, output) {
     cat('output$balmPlot was called\n')
     print(input$gsize)
     tryCatch(balm.vizualize2(values$data$data_table, input$gsize), error=function(e) e)
+    #balm.vizualize2(values$data$data_table, input$gsize)
   })
   
   output$total_abstracts <- renderText({
@@ -84,6 +81,14 @@ shinyServer(function(input, output) {
       Sys.sleep(10)
       return('Finished')
     }else({return(NULL)})
+  })
+  
+  output$freq_table <- renderTable(function() {
+    kwords <-strsplit(input$textarea.in, "\n")[[1]]
+    #print(kwords)
+    freq.table<-mine.freq(values$data$pimids,values$data$abstracts,kwords)
+    values[["freq.table"]] <- freq.table
+    print(freq.table)
   })
   
   output$balmPlotLegend = renderPlot(
@@ -111,17 +116,17 @@ shinyServer(function(input, output) {
       kterms[[ ans[1] ]] <- ans
     }  
     
-    if(nchar(input$kterms4) > 0 ) {
-      ans <- strsplit(toString(input$kterms4), ',')[[1]]
-      #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
-      kterms[[ ans[1] ]] <- ans
-    }  
+    #if(nchar(input$kterms4) > 0 ) {
+    #  ans <- strsplit(toString(input$kterms4), ',')[[1]]
+    #  #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
+    #  kterms[[ ans[1] ]] <- ans
+    #}  
     
-    if(nchar(input$kterms5) > 0 ) {
-      ans <- strsplit(toString(input$kterms5), ',')[[1]]
-      #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
-      kterms[[ ans[1] ]] <- ans
-    }
+    #if(nchar(input$kterms5) > 0 ) {
+    #  ans <- strsplit(toString(input$kterms5), ',')[[1]]
+    #  #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
+    #  kterms[[ ans[1] ]] <- ans
+    #}
     
     kterms <- kterms[!is.na(kterms)]
     balm.legend(c(names(kterms),"other"))
@@ -132,7 +137,7 @@ shinyServer(function(input, output) {
     cat('output$balmPlotPie was called\n')
     print(input$gsize)
     print(input$kterms1)
-    
+  
     #Construct key terms
     kterms <-list()
     
@@ -154,17 +159,17 @@ shinyServer(function(input, output) {
       kterms[[ ans[1] ]] <- ans
     }  
     
-    if(nchar(input$kterms4) > 0 ) {
-      ans <- strsplit(toString(input$kterms4), ',')[[1]]
-      #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
-      kterms[[ ans[1] ]] <- ans
-    }  
+    #if(nchar(input$kterms4) > 0 ) {
+    #  ans <- strsplit(toString(input$kterms4), ',')[[1]]
+    #  #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
+    #  kterms[[ ans[1] ]] <- ans
+    #}  
     
-    if(nchar(input$kterms5) > 0 ) {
-      ans <- strsplit(toString(input$kterms5), ',')[[1]]
-      #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
-      kterms[[ ans[1] ]] <- ans
-    }  
+    #if(nchar(input$kterms5) > 0 ) {
+    #  ans <- strsplit(toString(input$kterms5), ',')[[1]]
+    #  #kterms[[ gsub(" ","",ans[1], fixed=T) ]] <- ans
+    #  kterms[[ ans[1] ]] <- ans
+    #}  
     
     kterms <- kterms[!is.na(kterms)]
     #print(kterms)
@@ -175,5 +180,14 @@ shinyServer(function(input, output) {
     tryCatch(balm.pie2( values$data$data_table, input$gsize, c(names(kterms),"other"), values$data$freq_table ), error=function(e) e)
     
   })
+  
+  output$downloadReport <- downloadHandler(
+    filename = function() {
+      paste('report-', Sys.Date(), '.csv', sep='')
+    },
+    content = function(file) {
+      write.csv(values$freq.table, file)
+    }
+  )
   
 })
